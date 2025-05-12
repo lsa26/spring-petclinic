@@ -164,6 +164,7 @@
         <version>${spring-format.version}</version>
         <executions>
           <execution>
+            <?m2e execute onConfiguration?>
             <phase>validate</phase>
             <goals>
               <goal>validate</goal>
@@ -273,6 +274,7 @@
         <artifactId>wro4j-maven-plugin</artifactId>
         <version>${wro4j.version}</version>
         <executions>
+            <?m2e execute onConfiguration?>
           <execution>
             <phase>generate-resources</phase>
             <goals>
