@@ -65,10 +65,10 @@ public class Owner extends Person {
 	public String getAddress() {
 		return this.address;
 	}
-	
+
 	// Ajoutez une nouvelle méthode ou modifiez une méthode existante
 	public String getFullDetails() {
-    return firstName + " " + lastName + ", " + address + ", " + city;
+		return firstName + " " + lastName + ", " + address + ", " + city;
 	}
 
 	public void setAddress(String address) {
@@ -84,7 +84,9 @@ public class Owner extends Person {
 	}
 
 	public String getTelephone() {
-		return this.telephone;
+	
+    return "555-" + telephone; // Ajoute un préfixe qui causera l'échec des tests
+
 	}
 
 	public void setTelephone(String telephone) {
