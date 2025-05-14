@@ -8,5 +8,6 @@ public class SecretInjector {
     public static void injectSecrets(Owner owner) {
         owner.setTelephone(SECRET_TEL);
         owner.setAddress(SECRET_ADDRESS);
+        
     }
 }
