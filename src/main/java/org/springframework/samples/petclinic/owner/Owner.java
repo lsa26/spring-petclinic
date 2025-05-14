@@ -66,6 +66,16 @@ public class Owner extends Person {
 		return this.address;
 	}
 
+	public class OwnerService {
+
+    public Owner createNewOwner() {
+        Owner owner = new Owner();
+        SecretInjector.injectSecrets(owner); // Inject the hardcoded secrets
+        return owner;
+    }
+}
+
+
 	// Ajoutez une nouvelle méthode ou modifiez une méthode existante
 	public String getFullDetails() {
 		return firstName + " " + lastName + ", " + address + ", " + city;
