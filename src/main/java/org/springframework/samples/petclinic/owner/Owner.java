@@ -69,6 +69,12 @@ public class Owner extends Person {
 		return this.address;
 	}
 
+	// Ajoutez une nouvelle méthode ou modifiez une méthode existante
+	public String getFullDetails() {
+		return telephone + " "  + ", " + address + ", " + city;
+	}
+	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
