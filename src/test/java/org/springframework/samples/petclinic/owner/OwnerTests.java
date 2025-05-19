@@ -5,17 +5,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class OwnerTests {
 
-    @Test
-    public void testGetFullDetails() {
-        // Arrange
-        Owner owner = new Owner();
+	@Test
+	public void testGetFullDetails() {
+		// Arrange
+		Owner owner = new Owner();
 
-        // Act
-        String result = owner.getFullDetails();
+		// Act
+		String result = owner.getFullDetails();
 
-        // Assert
-        assertEquals("0123456789 , 123 Rue de Paris, Paris", result);
-    }
+		// Assert
+		assertEquals("0123456789 , 123 Rue de Paris, Paris", result);
+	}
 
 }
-
