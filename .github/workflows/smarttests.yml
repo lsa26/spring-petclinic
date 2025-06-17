@@ -1,0 +1,110 @@
+name: Launchable Test Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_repo:
+        description: 'Dépôt Git'
+        required: true
+        default: 'https://github.com/lsa26/spring-petclinic'
+        type: string
+      git_branch:
+        description: 'Branche Git'
+        required: true
+        default: 'main'
+        type: string
+      subset_size:
+        description: 'Pourcentage du sous-ensemble de tests à exécuter (1-100)'
+        required: true
+        default: '100'
+        type: string
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  launchable-tests:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    
+    env:
+      MAVEN_HOME: /opt/homebrew/Cellar/maven/3.9.9/libexec
+      JAVA_HOME: /opt/homebrew/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home
+      LOCAL_BIN: ${{ github.workspace }}/local-bin
+    
+    steps:
+    - name: 🔄 Checkout du code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.inputs.git_repo && github.event.inputs.git_repo || github.repository }}
+        ref: ${{ github.event.inputs.git_branch || github.ref }}
+        fetch-depth: 0
+    
+    - name: 🛠️ Configuration de l'environnement
+      run: |
+        echo "PATH=${MAVEN_HOME}/bin:${JAVA_HOME}/bin:${LOCAL_BIN}:${PATH}" >> $GITHUB_ENV
+        mkdir -p ${LOCAL_BIN}
+    
+    - name: 🔍 Vérification des prérequis
+      run: |
+        echo "🛠️ Installation de Launchable CLI et vérification des prérequis..."
+        python3 --version || exit 1
+        pip3 install --user launchable
+        python3 -m launchable --version
+        mvn --version
+        java -version
+    
+    - name: 🔐 Vérification Launchable
+      env:
+        LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
+      run: |
+        echo "🔐 Vérification du token Launchable..."
+        python3 -m launchable verify || echo "⚠️ Vérification échouée, mais on continue pour la démo."
+    
+    - name: 📦 Record Build + Subset
+      env:
+        LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
+      run: |
+        BUILD_TAG_CLEAN=$(echo "${{ github.job }}-${{ github.run_number }}" | tr -c 'a-zA-Z0-9._-' '_')
+        
+        echo "📦 Enregistrement du build avec Launchable..."
+        python3 -m launchable record build --name "$BUILD_TAG_CLEAN" --source .
+        
+        SUBSET_SIZE="${{ github.event.inputs.subset_size || '100' }}"
+        echo "🔍 Sélection d'un sous-ensemble de tests (${SUBSET_SIZE}%)..."
+        python3 -m launchable subset --build "$BUILD_TAG_CLEAN" --target "${SUBSET_SIZE}%" maven src/test/java > subset.txt
+        cat subset.txt
+    
+    - name: 🧪 Lancement des tests
+      run: |
+        echo "🧪 Lancement des tests avec Launchable subset..."
+        ./mvnw test -Dsurefire.includeFile=subset.txt
+    
+    - name: 📤 Record Tests
+      if: always()
+      env:
+        LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
+      run: |
+        BUILD_TAG_CLEAN=$(echo "${{ github.job }}-${{ github.run_number }}" | tr -c 'a-zA-Z0-9._-' '_')
+        
+        echo "📤 Enregistrement des résultats des tests..."
+        python3 -m launchable record tests --build "$BUILD_TAG_CLEAN" maven target/surefire-reports
+    
+    - name: 📊 Publication des résultats de tests
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Maven Tests
+        path: '**/target/surefire-reports/*.xml'
+        reporter: java-junit
+    
+    - name: 📁 Archivage des artefacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          subset.txt
+          **/target/surefire-reports/**
+        retention-days: 30
