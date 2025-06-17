@@ -3,11 +3,11 @@
 
 name: Java CI with Maven
 
-on:
-  push:
-    branches: [ wavefront ]
-  pull_request:
-    branches: [ wavefront ]
+#on:
+  #push:
+    #branches: [ wavefront ]
+  #pull_request:
+    #branches: [ wavefront ]
 
 jobs:
   build:
