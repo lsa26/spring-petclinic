@@ -3,11 +3,11 @@
 
 name: Workflow
 
-on:
-  push:
-    branches: [ wavefront ]
-  pull_request:
-    branches: [ wavefront ]
+#on:
+  #push:
+    #branches: [ wavefront ]
+  #pull_request:
+    #branches: [ wavefront ]
 
 jobs:
   build:
