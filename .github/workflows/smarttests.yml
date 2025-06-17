@@ -11,7 +11,7 @@ on:
       git_branch:
         description: 'Branche Git'
         required: true
-        default: 'main'
+        default: 'wavefront'
         type: string
       subset_size:
         description: 'Pourcentage du sous-ensemble de tests à exécuter (1-100)'
