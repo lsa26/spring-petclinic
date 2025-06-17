@@ -19,9 +19,9 @@ on:
         default: '100'
         type: string
   push:
-    branches: [ main ]
+    branches: [ wavefront ]
   pull_request:
-    branches: [ main ]
+    branches: [ wavefront ]
 
 jobs:
   launchable-tests:
