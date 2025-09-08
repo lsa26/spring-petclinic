@@ -76,10 +76,7 @@ public class Owner extends Person {
 }
 
 
-	// Ajoutez une nouvelle méthode ou modifiez une méthode existante
-	public String getFullDetails() {
-		return firstName + " " + lastName + ", " + address + ", " + city;
-	}
+
 
 	public void setAddress(String address) {
 		this.address = address;
