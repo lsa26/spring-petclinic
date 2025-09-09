@@ -92,7 +92,7 @@ public class Owner extends Person {
 
 	public String getTelephone() {
 	
-    return  "55444E-" + telephone; // Ajoute un préfixe qui causera l'échec des tests
+    return  "55-" + telephone; // Ajoute un préfixe qui causera l'échec des tests
 
 	}
 
