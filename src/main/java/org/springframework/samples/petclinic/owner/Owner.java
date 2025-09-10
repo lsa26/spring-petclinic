@@ -91,8 +91,8 @@ public class Owner extends Person {
 	}
 
 	public String getTelephone() {
-	
-    return "55556-" + telephone; // Ajoute un préfixe qui causera l'échec des tests
+	 throw new RuntimeException("DEMO FAILURE");
+    //return "55556-" + telephone; // Ajoute un préfixe qui causera l'échec des tests
 
 	}
 
